@@ -22,6 +22,7 @@ public class Application {
     private static String service = "cognitiveservices";
 
 
+    // TODO: nothing in done in async fashion.
     public static void main(String[] args) throws Exception {
         Authenticate auth = new Authenticate(subscriptionKey);
         String token = auth.getToken();
