@@ -1,21 +1,13 @@
 package com.keedio;
 
 import com.keedio.domain.Authenticate;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
 
 @SpringBootApplication
 public class Application {
@@ -24,11 +16,16 @@ public class Application {
     private static String subscriptionKey = "bb93fc9e4d4048829566a49233355fc9";
     private static String host = "speech.platform.bing.com";
     private static String contentType = "audio/wav; codec=\"audio/pcm\"; samplerate=16000";
+    private static String baseUrl = "https://speech.platform.bing.com/speech/recognition";
+    private static String languageUri = "language=en-US";
+    private static String apiVersion = "v1";
+    private static String service = "cognitiveservices";
+
 
     public static void main(String[] args) throws Exception {
         Authenticate auth = new Authenticate(subscriptionKey);
         String token = auth.getToken();
-        String url = "https://speech.platform.bing.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US";
+        String url = Gen.buildUrl(baseUrl, Mode.conversation, service, apiVersion, languageUri);
 
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
@@ -39,7 +36,6 @@ public class Application {
         String wavpath="/Users/shubhamagrawal/Documents/testFile4.wav";
         File wavfile = new File(wavpath);
 
-        boolean success = true;
         if (wavfile.exists()) {
             System.out.println("**** audio.wav DETECTED: "+wavfile);
         }
@@ -62,7 +58,7 @@ public class Application {
             Gen.copyStream(dis,output);
         }
         catch(Exception e){
-
+            System.out.println("error occurred!! \n" + e.getStackTrace());
         }
 
         con.connect();
@@ -78,7 +74,7 @@ public class Application {
             in.close();
             System.out.println("***ASR RESULT: " + response.toString());
         } else {
-            System.out.println("error occured!! Response code is: " + responseCode);
+            System.out.println("error occurred!! Response code is: " + responseCode);
         }
     }
 }

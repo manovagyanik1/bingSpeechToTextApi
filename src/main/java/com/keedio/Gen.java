@@ -31,4 +31,8 @@ public class Gen {
             System.out.println("File to Network Stream Copy error "+ex);
         }
     }
+
+    public static String buildUrl(String baseUrl, Mode conversation, String service, String apiVersion, String languageUri){
+        return baseUrl+"/"+conversation+"/"+service+"/"+apiVersion+"?"+languageUri;
+    }
 }
